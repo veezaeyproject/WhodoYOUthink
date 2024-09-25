@@ -101,28 +101,34 @@ const questions = [
     "Who do you think is the most romantic?",
     "Free Pass ",
   ];
-let currentQuestionIndex = 0;
+  let usedQuestions = [];
 
-document.getElementById('startButton').addEventListener('click', startGame);
-document.getElementById('nextButton').addEventListener('click', nextQuestion);
-
-function startGame() {
-    document.getElementById('startButton').classList.add('hidden');
-    document.getElementById('gameArea').classList.remove('hidden');
-    currentQuestionIndex = 0;  // Reset the index for a new game
-    nextQuestion();
-}
-
-function nextQuestion() {
-    if (currentQuestionIndex < questions.length) {
-        const question = questions[currentQuestionIndex];
-        document.getElementById('question').innerText = question;
-        document.getElementById('instructions').innerText = "Tell the answer to the verifier. Next player, guess!";
-        currentQuestionIndex++;
-        document.getElementById('nextButton').classList.remove('hidden');
-    } else {
-        document.getElementById('question').innerText = "Game Over! No more questions.";
-        document.getElementById('instructions').innerText = "";
-        document.getElementById('nextButton').classList.add('hidden');
-    }
-}
+  document.getElementById('startButton').addEventListener('click', startGame);
+  document.getElementById('nextButton').addEventListener('click', nextQuestion);
+  
+  function startGame() {
+      document.getElementById('startButton').classList.add('hidden');
+      document.getElementById('gameArea').classList.remove('hidden');
+      usedQuestions = [];  // Reset used questions for a new game
+      nextQuestion();
+  }
+  
+  function nextQuestion() {
+      if (usedQuestions.length < questions.length) {
+          let randomIndex;
+          do {
+              randomIndex = Math.floor(Math.random() * questions.length);
+          } while (usedQuestions.includes(randomIndex));  // Ensure no repeat questions
+  
+          const question = questions[randomIndex];
+          usedQuestions.push(randomIndex);  // Mark the question as used
+  
+          document.getElementById('question').innerText = question;
+          document.getElementById('instructions').innerText = "Tell the answer to the verifier. Next player, guess!";
+          document.getElementById('nextButton').classList.remove('hidden');
+      } else {
+          document.getElementById('question').innerText = "Game Over! No more questions.";
+          document.getElementById('instructions').innerText = "";
+          document.getElementById('nextButton').classList.add('hidden');
+      }
+  }
